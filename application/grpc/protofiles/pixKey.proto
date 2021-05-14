@@ -1,0 +1,53 @@
+// estou falando qual versão vai ser utilizada
+syntax = "proto3";
+
+package github.com.Rodrigo001de.codepix;
+
+// estou falando que o go_package vai pegar os protofiles que estão nessa pasta
+// e vai gerar um name space chamado pb
+option go_package = "protofiles;pb";
+
+// criando um tipo de menssagem que vai o padrão de menssagem que alguém vai 
+// enviar para o sistema falando que ele quer registrar uma nova menssagem
+message PixKeyRegistration {
+  string kind = 1;
+  string key = 2;
+  string accountId = 3;
+}
+
+message PixKey {
+  string kind = 1;
+  string key = 2;
+}
+
+message Account {
+  string accountId = 1;
+  string accountNumber = 2;
+  string bankId = 3;
+  string bankName = 4;
+  string OwnerName = 5;
+  string createdAt = 6;
+}
+
+message PixKeyInfo {
+  string id = 1;
+  string kind = 2;
+  string key = 3;
+  Account account = 4;
+  string createdAt = 5;
+}
+
+message PixKeyCreatedResult {
+  string id = 1;
+  string status = 2;
+  string error = 3;
+}
+
+// criando um serviço
+service PixService {
+  // eu registro passando o PixKeyRegistration e eu receboo resultado chamado
+  // PixKeyCreatedResult
+  rpc RegisterPixKey (PixKeyRegistration) returns (PixKeyCreatedResult) {};
+  // vai buscar uma chave passando uma PixKey
+  rpc Find(PixKey) returns (PixKeyInfo) {};
+}
