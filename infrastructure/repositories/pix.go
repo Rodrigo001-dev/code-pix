@@ -12,12 +12,10 @@ type PixKeyRepositoryDb struct {
 }
 
 func (r PixKeyRepositoryDb) AddBank(bank *model.Bank) error {
-	// inserirndo o bando diretamente porque ele já está validado
 	err := r.Db.Create(bank).Error
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -26,7 +24,6 @@ func (r PixKeyRepositoryDb) AddAccount(account *model.Account) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -38,17 +35,13 @@ func (r PixKeyRepositoryDb) RegisterKey(pixKey *model.PixKey) (*model.PixKey, er
 	return pixKey, nil
 }
 
-func (r PixKeyRepositoryDb) FindKeyById(key string, kind string) (*model.PixKey, error) {
+func (r PixKeyRepositoryDb) FindKeyByKind(key string, kind string) (*model.PixKey, error) {
 	var pixKey model.PixKey
-
-	// quando eu mudar e rodar o First ele vai preencher o valor do resultado da
-	// entidade na variável(pixKey)
-	r.Db.Preload("Account.Bank").First(&pixKey, "kind = ?, and key = ?", kind, key)
+	r.Db.Preload("Account.Bank").First(&pixKey, "kind = ? and key = ?", kind, key)
 
 	if pixKey.ID == "" {
 		return nil, fmt.Errorf("no key was found")
 	}
-
 	return &pixKey, nil
 }
 
@@ -59,7 +52,6 @@ func (r PixKeyRepositoryDb) FindAccount(id string) (*model.Account, error) {
 	if account.ID == "" {
 		return nil, fmt.Errorf("no account found")
 	}
-
 	return &account, nil
 }
 
@@ -70,6 +62,5 @@ func (r PixKeyRepositoryDb) FindBank(id string) (*model.Bank, error) {
 	if bank.ID == "" {
 		return nil, fmt.Errorf("no bank found")
 	}
-
 	return &bank, nil
 }
